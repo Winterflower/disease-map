@@ -10,7 +10,7 @@ app = Flask(__name__)
 UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'uploads')
 ALLOWED_EXTENSIONS = set(['csv'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-UPLOADED_FILES = []
+UPLOADED_FILES = os.listdir(UPLOAD_FOLDER)
 
 
 @app.route('/')
@@ -52,9 +52,6 @@ def visualization():
     tag = autoload_server(*getMap(UPLOADED_FILES[0]))
 
     return render_template('app.html', map=tag)
-
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
