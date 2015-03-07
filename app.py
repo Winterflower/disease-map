@@ -49,7 +49,7 @@ def upload_csv():
 def visualization():
 
     # FIXME: do not hardcode the csv file path
-    tag = autoload_server(*getMap(UPLOADED_FILES[0]))
+    tag = autoload_server(*getMap(os.path.join('uploads', UPLOADED_FILES[0])))
 
     return render_template('app.html', map=tag)
 
