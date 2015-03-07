@@ -24,7 +24,7 @@ def parse_disease_csv(inputfileobject):
     return id,latitude, longitude, status
 
 
-def generate_bokeh_html(inputfilename):
+def generate_figure(inputfilename):
     inputfileobject = open(inputfilename, 'r')
 
     #parse csv file
@@ -39,6 +39,7 @@ def generate_bokeh_html(inputfilename):
 
     #define tools
     TOOLS = "resize,hover,save"
+    output_server("map")
     p = figure(title="Periodic Table", tools=TOOLS)
     p.plot_width = 1200
     p.toolbar_location = "left"
@@ -57,4 +58,6 @@ def generate_bokeh_html(inputfilename):
     hover.tooltips = OrderedDict([
         ("disease_status", "@status")])
 
-    return p
+    push()
+
+    return p, cursession()
