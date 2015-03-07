@@ -2,6 +2,18 @@
 from collections import OrderedDict
 from bokeh.plotting import *
 from bokeh.models import HoverTool, ColumnDataSource
+import time
+from threading import Thread
+from bokeh.browserlib import view
+from bokeh.document import Document
+from bokeh.embed import file_html
+from bokeh.models.glyphs import Circle
+from bokeh.models import (
+    GMapPlot, Range1d, ColumnDataSource, LinearAxis,
+    PanTool, WheelZoomTool, BoxSelectTool,
+    BoxSelectionOverlay, GMapOptions,
+    NumeralTickFormatter, PrintfTickFormatter)
+from bokeh.resources import INLINE
 
 
 ######################
@@ -9,24 +21,93 @@ from bokeh.models import HoverTool, ColumnDataSource
 ######################
 
 def getMap(inputfilename):
-    from bokeh.browserlib import view
-    from bokeh.document import Document
-    from bokeh.embed import file_html
-    from bokeh.models.glyphs import Circle
-    from bokeh.models import (
-        GMapPlot, Range1d, ColumnDataSource, LinearAxis,
-        PanTool, WheelZoomTool, BoxSelectTool,
-        BoxSelectionOverlay, GMapOptions,
-        NumeralTickFormatter, PrintfTickFormatter)
-    from bokeh.resources import INLINE
-    from pop import Population
 
+
+    source, avgLat, avgLon = generate_figure(inputfilename)
+    plot = getPlot(source, avgLat, avgLon)
+
+
+
+    # Setup the session
+    document = Document()
+    session = Session(root_url='http://localhost:5006/', load_from_config=False)
+    session.use_doc('population_reveal')
+    session.load_document(document)
+    # Make the chart
+    # Attach the chart to the document
+    document.clear()  # Semi-optional - see below
+    document.add(plot)
+    # Put it on the server
+    session.store_document(document)
+    thread = Thread(target=update_population, args=(session, document,'data/testDataDay2.csv', plot))
+    thread.start()
+
+
+    return plot, session
+
+
+def parse_disease_csv(inputfileobject):
+    id=[]
+    latitude=[]
+    longitude=[]
+    status=[]
+    day=[]
+
+    for line in inputfileobject:
+        line_elements=line.split(",")
+        id.append(line_elements[0])
+        latitude.append(float(line_elements[1]))
+        longitude.append(float(line_elements[2]))
+        status.append(line_elements[3])
+        day.append(int(line_elements[4]))
+    return id,latitude, longitude, status, day
+
+
+def generate_figure(inputfilename, startFrom=1):
+    inputfileobject = open(inputfilename, 'r')
+
+    #parse csv file
+    id, latitude, longitude, status, days = parse_disease_csv(inputfileobject)
+
+    #count the days
+    # numDays=len(set(days))
+    daySoFar=1
+    subLat, subLong= [], []
+
+    avgLat = sum(latitude)/len(latitude)
+    avgLon = sum(longitude)/len(longitude)
+    source = ColumnDataSource(
+        data=dict(
+           lat=latitude,
+           lon=longitude,
+        )
+    )
+    return source, avgLon, avgLat
+
+    # for ind in range(len(days)):
+    #     if days[ind] == daySoFar:
+    #         subLat.append(latitude[ind])
+    #         subLong.append(longitude[ind])
+    #     #create Column Datasource
+
+    #     else:
+    #         avgLat = sum(subLat)/len(subLat)
+    #         avgLon = sum(subLong)/len(subLong)
+    #         source = ColumnDataSource(
+    #             data=dict(
+    #                lat=subLat,
+    #                lon=subLong,
+    #             )
+    #         )
+    #         daySoFar=days[ind]
+    #         yield source, avgLon, avgLat
+
+
+def getPlot(source, avgLat, avgLon):
     x_range = Range1d()
     y_range = Range1d()
-    source, avgLat, avgLon = generate_figure(inputfilename)
 
-
-    map_options = GMapOptions(lat=avgLat, lng=avgLon, zoom=8)
+    map_options = GMapOptions(lat=avgLat, lng=avgLon, zoom=1)
 
     plot = GMapPlot(
         x_range=x_range, y_range=y_range,
@@ -53,54 +134,17 @@ def getMap(inputfilename):
 
     overlay = BoxSelectionOverlay(tool=box_select)
     plot.add_layout(overlay)
+    return plot
 
 
-    # Setup the session
-    document = Document()
-    session = Session(root_url='http://localhost:5006/', load_from_config=False)
-    session.use_doc('population_reveal')
-    session.load_document(document)
-    # Make the chart
-    # Attach the chart to the document
-    document.clear()  # Semi-optional - see below
-    document.add(plot)
-    # Put it on the server
-    session.store_document(document)
-
-
-    return plot, session
-
-
-def parse_disease_csv(inputfileobject):
-    id=[]
-    latitude=[]
-    longitude=[]
-    status=[]
-
-    for line in inputfileobject:
-        line_elements=line.split(",")
-        id.append(line_elements[0])
-        latitude.append(float(line_elements[1]))
-        longitude.append(float(line_elements[2]))
-        status.append(line_elements[3])
-    return id,latitude, longitude, status
-
-
-def generate_figure(inputfilename):
-    inputfileobject = open(inputfilename, 'r')
-
-    #parse csv file
-    id, latitude, longitude, status = parse_disease_csv(inputfileobject)
-
-    #create Column Datasource
-    source = ColumnDataSource(
-        data=dict(
-           lat=latitude,
-           lon=longitude,
-        )
-    )
-    avgLat = sum(latitude)/len(latitude)
-    avgLon = sum(longitude)/len(longitude)
+def update_population(session, doc, inputfilename, plot):
+    while True:
+        source, avgLat, avgLon = generate_figure(inputfilename)
+        plot = getPlot(source, avgLat, avgLon)
+        doc.add(plot)
+        session.load_document(doc)
+        session.push()
+        time.sleep(0.1)
 
     # #define tools
     # TOOLS = "resize,hover,save"
@@ -124,5 +168,3 @@ def generate_figure(inputfilename):
     #     ("disease_status", "@status")])
 
     # push()
-
-    return source, avgLon, avgLat
