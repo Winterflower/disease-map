@@ -50,24 +50,20 @@ def parse_disease_csv(inputfileobject):
     id=[]
     latitude=[]
     longitude=[]
-    status=[]
-    day=[]
 
     for line in inputfileobject:
         line_elements=line.split(",")
         id.append(line_elements[0])
         latitude.append(float(line_elements[1]))
         longitude.append(float(line_elements[2]))
-        status.append(line_elements[3])
-        day.append(int(line_elements[4]))
-    return id,latitude, longitude, status, day
+    return id,latitude, longitude
 
 
 def generate_figure(inputfilename, startFrom=1):
     inputfileobject = open(inputfilename, 'r')
 
     #parse csv file
-    id, latitude, longitude, status, days = parse_disease_csv(inputfileobject)
+    id, latitude, longitude = parse_disease_csv(inputfileobject)
 
     #count the days
     # numDays=len(set(days))
