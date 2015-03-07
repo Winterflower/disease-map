@@ -10,7 +10,7 @@ importantly, use the embed API, in a more complex way than just a simple script.
 """
 
 from bokeh.embed import autoload_server
-from visualization import generate_figure
+from visualization import getMap
 
 from flask import Flask, render_template
 app = Flask(__name__)
@@ -25,7 +25,7 @@ def render_plot():
     a non-blocking update.
     """
     # FIXME: do not hardcode the csv file path
-    tag = autoload_server(*generate_figure('data/testdata.csv'))
+    tag = autoload_server(*getMap('data/testdata.csv'))
 
     return render_template('app.html', map=tag)
 
