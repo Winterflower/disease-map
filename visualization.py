@@ -39,8 +39,8 @@ def getMap(inputfilename):
     document.add(plot)
     # Put it on the server
     session.store_document(document)
-    thread = Thread(target=update_population, args=(session, document,'data/testDataDay2.csv', plot))
-    thread.start()
+    #thread = Thread(target=update_population, args=(session, document,'data/testDataDay2.csv', plot))
+    #thread.start()
 
 
     return plot, session
@@ -103,12 +103,12 @@ def getPlot(source, avgLat, avgLon):
     x_range = Range1d()
     y_range = Range1d()
 
-    map_options = GMapOptions(lat=avgLat, lng=avgLon, zoom=1)
+    map_options = GMapOptions(lat=avgLat, lng=avgLon, zoom=2)
 
     plot = GMapPlot(
         x_range=x_range, y_range=y_range,
         map_options=map_options,
-        title = "Disases"
+        title = "Diseases"
     )
     plot.map_options.map_type="roadmap"
 
