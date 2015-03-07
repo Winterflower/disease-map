@@ -108,7 +108,7 @@ def getPlot(source, avgLat, avgLon):
     plot = GMapPlot(
         x_range=x_range, y_range=y_range,
         map_options=map_options,
-        title = "Disases"
+        title = "Diseases"
     )
     plot.map_options.map_type="roadmap"
 
