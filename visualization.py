@@ -1,4 +1,3 @@
-
 from collections import OrderedDict
 from bokeh.plotting import *
 from bokeh.models import HoverTool, ColumnDataSource
@@ -14,6 +13,7 @@ from bokeh.models import (
     BoxSelectionOverlay, GMapOptions,
     NumeralTickFormatter, PrintfTickFormatter)
 from bokeh.resources import INLINE
+import pandas as pd
 
 
 ######################
@@ -46,39 +46,15 @@ def getMap(inputfilename):
     return plot, session
 
 
-def parse_disease_csv(inputfileobject):
-    id=[]
-    latitude=[]
-    longitude=[]
-
-    for line in inputfileobject:
-        line_elements=line.split(",")
-        id.append(line_elements[0])
-        latitude.append(float(line_elements[1]))
-        longitude.append(float(line_elements[2]))
-    return id,latitude, longitude
-
-
-def generate_figure(inputfilename, startFrom=1):
-    inputfileobject = open(inputfilename, 'r')
-
-    #parse csv file
-    id, latitude, longitude = parse_disease_csv(inputfileobject)
-
-    #count the days
-    # numDays=len(set(days))
-    daySoFar=1
-    subLat, subLong= [], []
-
-    avgLat = sum(latitude)/len(latitude)
-    avgLon = sum(longitude)/len(longitude)
+def generate_figure(filename, startFrom=1):
+    df = pd.read_csv(filename, header=None, index_col=0, names=['lat', 'lon'])
     source = ColumnDataSource(
         data=dict(
-           lat=latitude,
-           lon=longitude,
+           lat=df['lat'],
+           lon=df['lon'],
         )
     )
-    return source, avgLon, avgLat
+    return source, df['lat'].mean(), df['lon'].mean()
 
     # for ind in range(len(days)):
     #     if days[ind] == daySoFar:
