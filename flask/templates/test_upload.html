@@ -44,7 +44,10 @@
       <div class="jumbotron">
         <h1>Upload your data</h1>
         <p class="lead">Please, upload a CSV file.</p>
-        <p><a class="btn btn-lg btn-success" href="#" role="button">Search file</a></p>
+	<form  method="post" enctype="multipart/form-data" action="/upload_csv">
+	  <input type="file" value="file" name="file"></input>
+	  <input type="submit" value="Upload"></input>
+	</form>
       </div>
 
       <div class="row marketing">
