@@ -19,8 +19,7 @@ def index():
 
 @app.route('/data_page')
 def data_page():
-    files = UPLOADED_FILES
-    return render_template("user_page.html", files=files)
+    return render_template("user_page.html", files=UPLOADED_FILES)
 
 
 # Check allowed extensions:
@@ -45,11 +44,11 @@ def upload_csv():
     return redirect(url_for('data_page'))
 
 
-@app.route('/visualise')
-def visualization():
+@app.route('/visualise/<int:id>')
+def visualization(id):
 
     # FIXME: do not hardcode the csv file path
-    tag = autoload_server(*getMap(os.path.join('uploads', UPLOADED_FILES[0])))
+    tag = autoload_server(*getMap(os.path.join('uploads', UPLOADED_FILES[id])))
 
     return render_template('app.html', map=tag)
 

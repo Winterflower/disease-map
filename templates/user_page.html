@@ -67,12 +67,12 @@
 		<th>File name</th>
 	      </tr></thead>
 	      <tbody>
-		{% for file in files %}
-		<tr><th scope="row">1</th>
-		    <td>{{file}}<td>
-		  <td> <a href='/visualise'>Visualise</a> </td>
-		<tr>
-	      {% endfor %}
+          {% for file in files %}
+          <tr><th scope="row">1</th>
+              <td>{{file}}<td>
+              <td> <a href='/visualise/{{loop.index - 1}}'>Visualise</a> </td>
+          <tr>
+          {% endfor %}
 	      </tbody>
 	    <table>
 	  </div>
