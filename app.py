@@ -10,7 +10,6 @@ app = Flask(__name__)
 UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'uploads')
 ALLOWED_EXTENSIONS = set(['csv'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-UPLOADED_FILES = os.listdir(UPLOAD_FOLDER)
 
 
 @app.route('/')
@@ -19,7 +18,7 @@ def index():
 
 @app.route('/data_page')
 def data_page():
-    return render_template("user_page.html", files=UPLOADED_FILES)
+    return render_template("user_page.html", files=os.listdir(UPLOAD_FOLDER))
 
 
 # Check allowed extensions:
@@ -40,7 +39,6 @@ def upload_csv():
             filename = file.filename
             print os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            UPLOADED_FILES.append(filename)
     return redirect(url_for('data_page'))
 
 
@@ -48,7 +46,7 @@ def upload_csv():
 def visualization(id):
 
     # FIXME: do not hardcode the csv file path
-    tag = autoload_server(*getMap(os.path.join('uploads', UPLOADED_FILES[id])))
+    tag = autoload_server(*getMap(os.path.join('uploads', os.listdir(UPLOAD_FOLDER)[id])))
 
     return render_template('app.html', map=tag)
 
