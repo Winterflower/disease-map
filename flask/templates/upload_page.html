@@ -51,34 +51,20 @@
 
           
 	  <div class="inner cover">
-            <h1 class="cover-heading">Data page</h1>
-            <p class="lead">Here is the data available to be visualised.</p>
-            <p class="lead">
-              <a href="/upload_page" class="btn btn-lg btn-default">Add data</a>
-            </p>
+	    <div class="upload_data">
+        <h1>Upload your data</h1>
+        <p class="lead">Please, upload a CSV file.</p>
+	<form  method="post" enctype="multipart/form-data" action="/upload_csv">
+	  <input type="file" value="file" name="file"></input>
+	  <input class="btn btn-info" type="submit" value="Upload"></input>
+	</form>
+      </div> 
           </div>
 
-	</div>
-
-	  <div class="files_list">
-	    <table class="table table-bordered">
-	      <thead><tr>
-		<th>#</th>
-		<td>File name</td>
-	      </tr></thead>
-	      <tbody>
-		{% for file in files %}
-		<tr>
-		  <th scope="row">1</th>
-		  <td>{{file}}<td>
-		  <td> <a class="btn btn-primary" href='app.html'>Visualise</a> </td>
-		<tr>
-	      {% endfor %}
-	      </tbody>
-	    <table>
-	  </div>
+         
+	  
           
-        
+        </div>
 
 	<div class="mastfoot">
             <div class="inner">

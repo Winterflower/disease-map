@@ -105,6 +105,11 @@ body {
 }
 }
 
+.upload_data {
+    /*width: 40%;*/
+    position: fixed;
+    left: 43%;
+}
 
 .files_list {
     width: 40%;
