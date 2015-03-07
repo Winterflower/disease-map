@@ -40,7 +40,6 @@ def upload_csv():
             print os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             UPLOADED_FILES.append(filename)
-            #return redirect(url_for('uploaded_file', filename=filename))
     return redirect(url_for('data_page'))
 
 
