@@ -7,7 +7,7 @@ from visualization import generate_figure, getMap
 app = Flask(__name__)
 
 # Global variables for CSV file upload
-UPLOAD_FOLDER = '~/Documents/fb_hack_2015/disease-map/flask/uploads'
+UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'uploads')
 ALLOWED_EXTENSIONS = set(['csv'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 UPLOADED_FILES = []
