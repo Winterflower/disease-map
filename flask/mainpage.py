@@ -1,22 +1,25 @@
 __author__ = 'winterflower'
 import os
 from flask import Flask, render_template, request, redirect, url_for
+
 app = Flask(__name__)
-
-
-@app.route('/')
-def hello_world():
-    return 'Hello World!'
-
-@app.route('/visualise')
-def visualization():
-    return "Now generating your visualization"
-
 
 # Global variables for CSV file upload
 UPLOAD_FOLDER = '/home/eleonore/Documents/fb_hack_2015/disease-map/flask/uploads'
 ALLOWED_EXTENSIONS = set(['csv'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+UPLOADED_FILES = []
+
+
+@app.route('/')
+def index():
+    return render_template("index.html")
+
+@app.route('/data_page')
+def data_page():
+    files = UPLOADED_FILES
+    return render_template("user_page.html", files=files)
+
 
 # Check allowed extensions:
 def allowed_file(filename):
@@ -32,14 +35,18 @@ def upload_page():
 def upload_csv():
     if request.method == 'POST':
         file = request.files['file']
-        print "*" * 3
         if file and allowed_file(file.filename):
             filename = file.filename
             print os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            
+            UPLOADED_FILES.append(filename)
             #return redirect(url_for('uploaded_file', filename=filename))
-    return '''    '''
+    return redirect(url_for('data_page'))
+
+
+@app.route('/visualise')
+def visualization():
+    return "Now generating your visualization"
 
 
 
