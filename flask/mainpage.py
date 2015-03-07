@@ -1,11 +1,13 @@
 __author__ = 'winterflower'
 import os
 from flask import Flask, render_template, request, redirect, url_for
+from bokeh.embed import autoload_server
+from visualization import generate_figure, getMap
 
 app = Flask(__name__)
 
 # Global variables for CSV file upload
-UPLOAD_FOLDER = '/home/eleonore/Documents/fb_hack_2015/disease-map/flask/uploads'
+UPLOAD_FOLDER = '~/Documents/fb_hack_2015/disease-map/flask/uploads'
 ALLOWED_EXTENSIONS = set(['csv'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 UPLOADED_FILES = []
@@ -45,7 +47,12 @@ def upload_csv():
 
 @app.route('/visualise')
 def visualization():
-    return "Now generating your visualization"
+
+    # FIXME: do not hardcode the csv file path
+    tag = autoload_server(*getMap(UPLOADED_FILES[0]))
+
+    return render_template('app.html', map=tag)
+
 
 
 

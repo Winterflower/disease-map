@@ -10,7 +10,7 @@ importantly, use the embed API, in a more complex way than just a simple script.
 """
 
 from bokeh.embed import autoload_server
-from visualization import getMap
+from visualization import generate_figure, getMap
 
 from flask import Flask, render_template
 app = Flask(__name__)
