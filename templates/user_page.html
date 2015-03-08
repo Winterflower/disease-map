@@ -30,62 +30,61 @@
   <body>
     
     <div class="site-wrapper">
-      
 
       <div class="site-wrapper-inner">
 	
-	<div class="masthead clearfix">
-            <div class="inner">
-              <h3 class="masthead-brand">World Disease Map after disasters</h3>
-              <nav>
-                <ul class="nav masthead-nav">
-                  <li class="active"><a href="#">Home</a></li>
-                  <li><a href="#">Info</a></li>
-                  <li><a href="#">Contact</a></li>
-                </ul>
-              </nav>
-            </div>
+        <div class="masthead clearfix">
+          <div class="inner">
+            <h3 class="masthead-brand">World Disease Map after disasters</h3>
+            <nav>
+              <ul class="nav masthead-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#">Info</a></li>
+                <li><a href="#">Contact</a></li>
+              </ul>
+            </nav>
           </div>
-	
+        </div>
+
         <div class="cover-container">
 
-          
-	  <div class="inner cover">
+          <div class="inner cover">
             <h1 class="cover-heading">Data page</h1>
             <p class="lead">Here is the data available to be visualised.</p>
             <p class="lead">
-              <a href="/upload_page" class="btn btn-lg btn-default">Add data</a>
+            <a href="/upload_page" class="btn btn-lg btn-default">Add data</a>
             </p>
           </div>
 
-	</div>
+        </div>
 
-	  <div class="files_list">
-	    <table class="table table-bordered">
-	      <thead><tr>
-		<th>#</th>
-		<td>File name</td>
-	      </tr></thead>
-	      <tbody>
-          {% for file in files %}
-          <tr><th scope="row">1</th>
-              <td>{{file}}<td>
-              <td> <a class="btn btn-primary" href='/visualise/{{loop.index - 1}}'>Visualise</a> </td>
-          <tr>
-          {% endfor %}
-	      </tbody>
-	    <table>
-	  </div>
-          
-        
+        <div class="files_list">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>File name</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for file in files %}
+              <tr>
+                <th scope="row">{{loop.index}}</th>
+                <td>{{file}}</td>
+                <td> <a class="btn btn-primary" href='/visualise/{{loop.index - 1}}'>Visualise</a> </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          <table>
+        </div>
 
-	<div class="mastfoot">
-            <div class="inner">
-	      <p>&copy; Disaster Map @ Facebook Hackathon 2015</p><br>
-              <p>Displayed using <a href="http://getbootstrap.com">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
-            </div>
+        <div class="mastfoot">
+          <div class="inner">
+            <p>&copy; Disaster Map @ Facebook Hackathon 2015</p><br>
+            <p>Displayed using <a href="http://getbootstrap.com">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
           </div>
-
+        </div>
 
       </div>
 
